@@ -1,19 +1,26 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Patterns.Mediator.ConsoleApp.Core;
 using Patterns.Mediator.ConsoleApp.DTO;
 using Patterns.Mediator.ConsoleApp.Messages;
+using Patterns.Mediator.ConsoleApp.Publisher;
 
 namespace Patterns.Mediator.ConsoleApp.Services
 {
     public class MediatorCustomerService : ICustomerService
     {
         private readonly IMediator _mediator;
+        private readonly IAsyncPublisher _asyncPublisher;
+        private readonly ILogger<MediatorCustomerService> _logger;
 
-        public MediatorCustomerService(IMediator mediator)
+        public MediatorCustomerService(IMediator mediator, IAsyncPublisher asyncPublisher, ILogger<MediatorCustomerService> logger)
         {
             _mediator = mediator;
+            _asyncPublisher = asyncPublisher;
+            _logger = logger;
         }
 
         public async Task<Result<GetCustomerResponse>> SearchAsync(GetCustomerByEmailRequest request)
@@ -77,7 +84,21 @@ namespace Patterns.Mediator.ConsoleApp.Services
                 DateOfBirth = updatedCustomer.Data.DateOfBirth,
             };
 
-            await _mediator.Publish(updatedCustomerEvent);
+            try
+            {
+                await _mediator.Publish(updatedCustomerEvent);
+                //await _asyncPublisher.Publish(updatedCustomerEvent, PublishStrategy.ParallelNoWait, CancellationToken.None);
+            }
+            catch (NotificationHandlerException exception)
+            {
+                _logger.LogError(exception, "Error occured when handling the customer updated event.");
+                return Result<GetCustomerResponse>.Failure(exception.ErrorCode, "Error occurred when handling events");
+            }
+            catch (Exception exception)
+            {
+                _logger.LogError(exception, "Error occured when handling the customer updated event.");
+                return Result<GetCustomerResponse>.Failure("SERVER_ERROR", "Internal server error");
+            }
 
             return updateCustomerOperation;
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using FluentValidation;
 using MediatR;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Patterns.Mediator.ConsoleApp.Core;
 using Patterns.Mediator.ConsoleApp.DTO;
+using Patterns.Mediator.ConsoleApp.Publisher;
 using Patterns.Mediator.ConsoleApp.Services;
 using Patterns.Mediator.ConsoleApp.Validators;
 
@@ -41,6 +43,10 @@ namespace Patterns.Mediator.ConsoleApp
                 DateOfBirth = "1982/11/01"
             }).GetAwaiter().GetResult();
 
+
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+            Console.WriteLine("{0:HH:mm:ss tt zz} :: Started", DateTime.Now);
             var updateCustomerOperation = customerService.UpdateCustomerAsync(new UpdateCustomerRequest
             {
                 Id = Guid.NewGuid().ToString("N"),
@@ -48,6 +54,11 @@ namespace Patterns.Mediator.ConsoleApp
                 LastName = "Hatangala",
                 DateOfBirth = "1982/11/01"
             }).GetAwaiter().GetResult();
+
+            stopWatch.Stop();
+            Console.WriteLine("{0:HH:mm:ss tt zz} :: Finished", DateTime.Now);
+            Console.WriteLine($"Time taken {stopWatch.ElapsedMilliseconds}ms");
+            Console.ReadLine();
 
         }
 
@@ -84,6 +95,7 @@ namespace Patterns.Mediator.ConsoleApp
             services.AddLogging(builder => builder.AddConsole());
 
             services.AddSingleton<ICustomerService, MediatorCustomerService>();
+            services.AddSingleton<IAsyncPublisher, AsyncPublisher>();
         }
     }
 }

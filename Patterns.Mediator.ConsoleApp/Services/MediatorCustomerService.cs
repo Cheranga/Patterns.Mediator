@@ -59,15 +59,7 @@ namespace Patterns.Mediator.ConsoleApp.Services
                 return Result<GetCustomerResponse>.Failure("CUSTOMER_NOT_FOUND", "customer is not found");
             }
 
-            var updateCustomerRequest = new UpdateCustomerRequest
-            {
-                Id = request.Id,
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                DateOfBirth = request.DateOfBirth
-            };
-
-            var updateCustomerOperation = await _mediator.Send(updateCustomerRequest);
+            var updateCustomerOperation = await _mediator.Send(request);
             if (!updateCustomerOperation.Status || updateCustomerOperation.Data == null)
             {
                 return updateCustomerOperation;
@@ -86,8 +78,8 @@ namespace Patterns.Mediator.ConsoleApp.Services
 
             try
             {
-                //await _mediator.Publish(updatedCustomerEvent);
-                await _asyncPublisher.Publish(updatedCustomerEvent, PublishStrategy.ParallelWhenAll, CancellationToken.None);
+                await _mediator.Publish(updatedCustomerEvent);
+                await _asyncPublisher.Publish(updatedCustomerEvent, PublishStrategy.ParallelNoWait, CancellationToken.None);
             }
             catch (NotificationHandlerException exception)
             {

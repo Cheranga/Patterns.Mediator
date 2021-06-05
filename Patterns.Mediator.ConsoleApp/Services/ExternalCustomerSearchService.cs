@@ -18,7 +18,14 @@ namespace Patterns.Mediator.ConsoleApp.Services
         public async Task<CustomerDto> SearchAsync(string email)
         {
             await Task.Delay(TimeSpan.FromSeconds(2));
-            throw new CustomerSearchException("EXT_CUSTOMER_SEARCH_BY_EMAIL", "error occurred when searching for the customer");
+            //throw new CustomerSearchException("EXT_CUSTOMER_SEARCH_BY_EMAIL", "error occurred when searching for the customer");
+
+            return new CustomerDto
+            {
+                FirstName = "Cheranga",
+                LastName = "Hatangala",
+                DateOfBirth = new DateTime(1982, 11, 1)
+            };
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Patterns.Mediator.ConsoleApp.Messages
             await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
 
             //throw new Exception("Birthday service error!");
-            throw new NotificationHandlerException(notification, "BIRTHDAY_SERVICE_ERROR", "error occurred when updating the birthday service");
+            //throw new NotificationHandlerException(notification, "BIRTHDAY_SERVICE_ERROR", "error occurred when updating the birthday service");
 
             _logger.LogInformation("Finished birthday service.");
         }

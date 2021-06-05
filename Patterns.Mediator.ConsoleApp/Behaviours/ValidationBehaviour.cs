@@ -2,16 +2,19 @@
 using System.Threading.Tasks;
 using FluentValidation;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Patterns.Mediator.ConsoleApp.Core;
 
 namespace Patterns.Mediator.ConsoleApp.Behaviours
 {
     public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, Result<TResponse>>
     {
+        private readonly ILogger<ValidationBehaviour<TRequest, TResponse>> _logger;
         private readonly IValidator<TRequest> _validator;
 
-        public ValidationBehaviour(IValidator<TRequest> validator = null)
+        public ValidationBehaviour(ILogger<ValidationBehaviour<TRequest, TResponse>> logger, IValidator<TRequest> validator = null)
         {
+            _logger = logger;
             _validator = validator;
         }
 
@@ -28,6 +31,7 @@ namespace Patterns.Mediator.ConsoleApp.Behaviours
                 return await next();
             }
 
+            _logger.LogError("Validation error when handling request {Request}", typeof(TRequest).Name);
             return Result<TResponse>.Failure("INVALID_REQUEST", validationResult);
         }
     }

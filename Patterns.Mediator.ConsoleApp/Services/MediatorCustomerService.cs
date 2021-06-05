@@ -87,7 +87,7 @@ namespace Patterns.Mediator.ConsoleApp.Services
             try
             {
                 //await _mediator.Publish(updatedCustomerEvent);
-                await _asyncPublisher.Publish(updatedCustomerEvent, PublishStrategy.ParallelNoWait, CancellationToken.None);
+                await _asyncPublisher.Publish(updatedCustomerEvent, PublishStrategy.ParallelWhenAll, CancellationToken.None);
             }
             catch (NotificationHandlerException exception)
             {

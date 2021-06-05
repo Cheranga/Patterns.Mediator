@@ -19,23 +19,18 @@ namespace Patterns.Mediator.ConsoleApp
     class Program
     {
         static void Main(string[] args)
-        {
-            var getCustomerByEmailRequest = new GetCustomerByEmailRequest
-            {
-                Email = "cheranga@gmail.com"
-            };
-
+        {  
             var provider = GetServiceProvider();
             var customerService = provider.GetRequiredService<ICustomerService>();
 
             var getCustomerByEmailOperation = customerService.SearchAsync(new GetCustomerByEmailRequest
             {
-                Email = "cheranga@gmail.com"
+                Email = ""
             }).GetAwaiter().GetResult();
 
             var getCustomerByIdOperation = customerService.SearchAsync(new GetCustomerByIdRequest
             {
-                Id = Guid.NewGuid().ToString("N")
+                Id = ""//Guid.NewGuid().ToString("N")
             }).GetAwaiter().GetResult();
 
             customerService.CreateCustomerAsync(new CreateCustomerRequest
@@ -86,6 +81,10 @@ namespace Patterns.Mediator.ConsoleApp
 
             services.AddValidatorsFromAssemblies(assemblies);
             services.AddMediatR(assemblies);
+            
+            //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+            services.AddTransient<IPipelineBehavior<GetCustomerByEmailRequest, Result<GetCustomerResponse>>, ValidationBehaviour<GetCustomerByEmailRequest, GetCustomerResponse>>();
+            services.AddTransient<IPipelineBehavior<GetCustomerByIdRequest, Result<GetCustomerResponse>>, ValidationBehaviour<GetCustomerByIdRequest, GetCustomerResponse>>();
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LogPerformanceBehaviour<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestExceptionProcessorBehavior<,>));
 

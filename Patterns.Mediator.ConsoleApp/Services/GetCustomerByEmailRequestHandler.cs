@@ -10,22 +10,22 @@ namespace Patterns.Mediator.ConsoleApp.Services
     public class GetCustomerByEmailRequestHandler : IRequestHandler<GetCustomerByEmailRequest, Result<GetCustomerResponse>>
     {
         private readonly IExternalCustomerSearchService _externalCustomerSearchService;
-        private readonly IValidator<GetCustomerByEmailRequest> _validator;
+        //private readonly IValidator<GetCustomerByEmailRequest> _validator;
 
-        public GetCustomerByEmailRequestHandler(IValidator<GetCustomerByEmailRequest> validator, IExternalCustomerSearchService externalCustomerSearchService)
+        public GetCustomerByEmailRequestHandler(/*IValidator<GetCustomerByEmailRequest> validator, */IExternalCustomerSearchService externalCustomerSearchService)
         {
-            _validator = validator;
+            //_validator = validator;
             _externalCustomerSearchService = externalCustomerSearchService;
         }
 
 
         public async Task<Result<GetCustomerResponse>> Handle(GetCustomerByEmailRequest request, CancellationToken cancellationToken)
         {
-            var validationResult = await _validator.ValidateAsync(request, cancellationToken);
-            if (!validationResult.IsValid)
-            {
-                return Result<GetCustomerResponse>.Failure("INVALID_REQUEST", validationResult);
-            }
+            //var validationResult = await _validator.ValidateAsync(request, cancellationToken);
+            //if (!validationResult.IsValid)
+            //{
+            //    return Result<GetCustomerResponse>.Failure("INVALID_REQUEST", validationResult);
+            //}
 
             var customer = await _externalCustomerSearchService.SearchAsync(request.Email);
 

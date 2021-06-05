@@ -25,6 +25,8 @@ namespace Patterns.Mediator.ConsoleApp.Services
                 return Result<GetCustomerResponse>.Failure("INVALID_REQUEST", validationResult);
             }
 
+            throw new Exception("error occurred!");
+
             return Result<GetCustomerResponse>.Success(new GetCustomerResponse
             {
                 Data = new CustomerDto

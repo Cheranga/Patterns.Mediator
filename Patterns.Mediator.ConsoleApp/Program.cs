@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using FluentValidation;
 using MediatR;
+using MediatR.Pipeline;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -91,11 +92,14 @@ namespace Patterns.Mediator.ConsoleApp
 
             services.AddValidatorsFromAssemblies(assemblies);
             services.AddMediatR(assemblies);
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestExceptionProcessorBehavior<,>));
 
             services.AddLogging(builder => builder.AddConsole());
 
             services.AddSingleton<ICustomerService, MediatorCustomerService>();
             services.AddSingleton<IAsyncPublisher, AsyncPublisher>();
+
+            services.AddHttpClient<IExternalCustomerSearchService, ExternalCustomerSearchService>();
         }
     }
 }

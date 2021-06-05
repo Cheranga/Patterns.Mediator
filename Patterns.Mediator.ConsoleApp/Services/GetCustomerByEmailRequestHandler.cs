@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
 using MediatR;
@@ -10,11 +9,13 @@ namespace Patterns.Mediator.ConsoleApp.Services
 {
     public class GetCustomerByEmailRequestHandler : IRequestHandler<GetCustomerByEmailRequest, Result<GetCustomerResponse>>
     {
+        private readonly IExternalCustomerSearchService _externalCustomerSearchService;
         private readonly IValidator<GetCustomerByEmailRequest> _validator;
 
-        public GetCustomerByEmailRequestHandler(IValidator<GetCustomerByEmailRequest> validator)
+        public GetCustomerByEmailRequestHandler(IValidator<GetCustomerByEmailRequest> validator, IExternalCustomerSearchService externalCustomerSearchService)
         {
             _validator = validator;
+            _externalCustomerSearchService = externalCustomerSearchService;
         }
 
 
@@ -26,13 +27,15 @@ namespace Patterns.Mediator.ConsoleApp.Services
                 return Result<GetCustomerResponse>.Failure("INVALID_REQUEST", validationResult);
             }
 
+            var customer = await _externalCustomerSearchService.SearchAsync(request.Email);
+
             return Result<GetCustomerResponse>.Success(new GetCustomerResponse
             {
                 Data = new CustomerDto
                 {
-                    FirstName = "Cheranga",
-                    LastName = "Hatangala",
-                    DateOfBirth = new DateTime(1982, 11, 1)
+                    FirstName = customer.FirstName,
+                    LastName = customer.LastName,
+                    DateOfBirth = customer.DateOfBirth
                 }
             });
         }

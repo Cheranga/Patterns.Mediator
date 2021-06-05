@@ -33,33 +33,26 @@ namespace Patterns.Mediator.ConsoleApp
                 Email = "cheranga@gmail.com"
             }).GetAwaiter().GetResult();
 
-            //var getCustomerByIdOperation = customerService.SearchAsync(new GetCustomerByIdRequest
-            //{
-            //    Id = Guid.NewGuid().ToString("N")
-            //}).GetAwaiter().GetResult();
+            var getCustomerByIdOperation = customerService.SearchAsync(new GetCustomerByIdRequest
+            {
+                Id = Guid.NewGuid().ToString("N")
+            }).GetAwaiter().GetResult();
 
-            //customerService.CreateCustomerAsync(new CreateCustomerRequest
-            //{
-            //    FirstName = "Cheranga",
-            //    LastName = "Hatangala",
-            //    DateOfBirth = "1982/11/01"
-            //}).GetAwaiter().GetResult();
+            customerService.CreateCustomerAsync(new CreateCustomerRequest
+            {
+                FirstName = "Cheranga",
+                LastName = "Hatangala",
+                DateOfBirth = "1982/11/01"
+            }).GetAwaiter().GetResult();
 
+            var updateCustomerOperation = customerService.UpdateCustomerAsync(new UpdateCustomerRequest
+            {
+                Id = Guid.NewGuid().ToString("N"),
+                FirstName = "Cheranga",
+                LastName = "Hatangala",
+                DateOfBirth = "1982/11/01"
+            }).GetAwaiter().GetResult();
 
-            //var stopWatch = new Stopwatch();
-            //stopWatch.Start();
-            //Console.WriteLine("{0:HH:mm:ss tt zz} :: Started", DateTime.Now);
-            //var updateCustomerOperation = customerService.UpdateCustomerAsync(new UpdateCustomerRequest
-            //{
-            //    Id = Guid.NewGuid().ToString("N"),
-            //    FirstName = "Cheranga",
-            //    LastName = "Hatangala",
-            //    DateOfBirth = "1982/11/01"
-            //}).GetAwaiter().GetResult();
-
-            //stopWatch.Stop();
-            //Console.WriteLine("{0:HH:mm:ss tt zz} :: Finished", DateTime.Now);
-            //Console.WriteLine($"Time taken {stopWatch.ElapsedMilliseconds}ms");
             Console.ReadLine();
 
         }

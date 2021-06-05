@@ -1,4 +1,4 @@
-﻿namespace Patterns.Mediator.ConsoleApp
+﻿namespace Patterns.Mediator.ConsoleApp.DTO
 {
     public class GetCustomerResponse
     {

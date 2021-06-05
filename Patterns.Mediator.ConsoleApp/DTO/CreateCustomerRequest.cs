@@ -1,11 +1,11 @@
-﻿using System;
+﻿using MediatR;
 
 namespace Patterns.Mediator.ConsoleApp.DTO
 {
-    public class CustomerDto
+    public class CreateCustomerRequest : IRequest
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public DateTime DateOfBirth { get; set; }
+        public string DateOfBirth { get; set; }
     }
 }

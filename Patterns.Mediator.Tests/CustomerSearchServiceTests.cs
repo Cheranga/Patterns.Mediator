@@ -7,6 +7,9 @@ using FluentValidation;
 using FluentValidation.Results;
 using Moq;
 using Patterns.Mediator.ConsoleApp;
+using Patterns.Mediator.ConsoleApp.Core;
+using Patterns.Mediator.ConsoleApp.DTO;
+using Patterns.Mediator.ConsoleApp.Services;
 using TestStack.BDDfy;
 using Xunit;
 
@@ -40,6 +43,8 @@ namespace Patterns.Mediator.Tests
 
             return Task.CompletedTask;
         }
+
+        
 
         private void ThenMustReturnFailure()
         {

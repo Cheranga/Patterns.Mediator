@@ -1,4 +1,5 @@
 using FluentValidation;
+using Patterns.Mediator.ConsoleApp.DTO;
 
 namespace Patterns.Mediator.ConsoleApp.Validators
 {

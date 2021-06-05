@@ -1,6 +1,6 @@
 ﻿using FluentValidation.Results;
 
-namespace Patterns.Mediator.ConsoleApp
+namespace Patterns.Mediator.ConsoleApp.Core
 {
     public class Result<TData>
     {
@@ -15,6 +15,11 @@ namespace Patterns.Mediator.ConsoleApp
         public static Result<TData> Failure(string errorCode)
         {
             return Failure(errorCode, new ValidationFailure(errorCode, errorCode));
+        }
+
+        public static Result<TData> Failure(string errorCode, string errorMessage)
+        {
+            return Failure(errorCode, new ValidationFailure(errorCode, errorMessage));
         }
 
         public static Result<TData> Failure(string errorCode, params ValidationFailure[] failures)

@@ -1,7 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
 using FluentValidation;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using Patterns.Mediator.ConsoleApp.Core;
+using Patterns.Mediator.ConsoleApp.DTO;
+using Patterns.Mediator.ConsoleApp.Services;
 using Patterns.Mediator.ConsoleApp.Validators;
 
 namespace Patterns.Mediator.ConsoleApp
@@ -15,7 +21,34 @@ namespace Patterns.Mediator.ConsoleApp
                 Email = "cheranga@gmail.com"
             };
 
-            var response = GetCustomerResponse(getCustomerByEmailRequest).GetAwaiter().GetResult();
+            var provider = GetServiceProvider();
+            var customerService = provider.GetRequiredService<ICustomerService>();
+
+            var getCustomerByEmailOperation = customerService.SearchAsync(new GetCustomerByEmailRequest
+            {
+                Email = "cheranga@gmail.com"
+            }).GetAwaiter().GetResult();
+
+            var getCustomerByIdOperation = customerService.SearchAsync(new GetCustomerByIdRequest
+            {
+                Id = Guid.NewGuid().ToString("N")
+            }).GetAwaiter().GetResult();
+
+            customerService.CreateCustomerAsync(new CreateCustomerRequest
+            {
+                FirstName = "Cheranga",
+                LastName = "Hatangala",
+                DateOfBirth = "1982/11/01"
+            }).GetAwaiter().GetResult();
+
+            var updateCustomerOperation = customerService.UpdateCustomerAsync(new UpdateCustomerRequest
+            {
+                Id = Guid.NewGuid().ToString("N"),
+                FirstName = "Cheranga",
+                LastName = "Hatangala",
+                DateOfBirth = "1982/11/01"
+            }).GetAwaiter().GetResult();
+
         }
 
         static async Task<Result<GetCustomerResponse>> GetCustomerResponse(GetCustomerByEmailRequest request)
@@ -34,6 +67,7 @@ namespace Patterns.Mediator.ConsoleApp
             RegisterDependencies(services);
 
             var serviceProvider = services.BuildServiceProvider();
+            
             return serviceProvider;
         }
 
@@ -45,6 +79,11 @@ namespace Patterns.Mediator.ConsoleApp
             };
 
             services.AddValidatorsFromAssemblies(assemblies);
+            services.AddMediatR(assemblies);
+
+            services.AddLogging(builder => builder.AddConsole());
+
+            services.AddSingleton<ICustomerService, MediatorCustomerService>();
         }
     }
 }

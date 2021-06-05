@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using MediatR;
 using Patterns.Mediator.ConsoleApp.Core;
 using Patterns.Mediator.ConsoleApp.DTO;
+using Patterns.Mediator.ConsoleApp.Messages;
 
 namespace Patterns.Mediator.ConsoleApp.Services
 {
@@ -59,6 +61,23 @@ namespace Patterns.Mediator.ConsoleApp.Services
             };
 
             var updateCustomerOperation = await _mediator.Send(updateCustomerRequest);
+            if (!updateCustomerOperation.Status || updateCustomerOperation.Data == null)
+            {
+                return updateCustomerOperation;
+            }
+
+            var updatedCustomer = updateCustomerOperation.Data;
+
+            var updatedCustomerEvent = new CustomerUpdatedEvent
+            {
+                Id = request.Id,
+                UpdatedDateTime = DateTime.UtcNow,
+                FirstName = updatedCustomer.Data.FirstName,
+                LastName = updatedCustomer.Data.LastName,
+                DateOfBirth = updatedCustomer.Data.DateOfBirth,
+            };
+
+            await _mediator.Publish(updatedCustomerEvent);
 
             return updateCustomerOperation;
         }

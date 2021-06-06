@@ -82,7 +82,6 @@ namespace Patterns.Mediator.ConsoleApp
             services.AddValidatorsFromAssemblies(assemblies);
             services.AddMediatR(assemblies);
             
-            //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
             services.AddTransient<IPipelineBehavior<GetCustomerByEmailRequest, Result<GetCustomerResponse>>, ValidationBehaviour<GetCustomerByEmailRequest, GetCustomerResponse>>();
             services.AddTransient<IPipelineBehavior<GetCustomerByIdRequest, Result<GetCustomerResponse>>, ValidationBehaviour<GetCustomerByIdRequest, GetCustomerResponse>>();
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LogPerformanceBehaviour<,>));
